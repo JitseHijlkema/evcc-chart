@@ -4,8 +4,6 @@
 
 Helm chart for EVCC (evcc.io)
 
-evcc is committed to optimizing the sustainability of charging our electric vehicles. To this end, evcc enables charging with as much self-generated solar power as possible. In most cases, this is even possible without any further changes to the existing home electrical system.
-
 **Homepage:** <https://evcc.io/>
 
 ## Values
