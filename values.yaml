@@ -1,0 +1,268 @@
+# Default values for evcc.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Replica count for the deployment
+replicaCount: 1
+
+# -- Revision history limit for the deployment
+revisionHistoryLimit: 0
+
+# -- Specifies the deployment strategy used to replace old Pods by new ones, default: `RollingUpdate`
+deploymentStrategy:
+  type: RollingUpdate
+  # -- The maximum number of Pods that can be created over the desired number of Pods.
+  maxSurge: 1
+  # -- The maximum number of Pods that can be unavailable during the update.
+  maxUnavailable: 0
+
+image:
+  # -- The image registry to pull the image from.
+  registry: docker.io
+  # -- The image repository to pull the image from.
+  repository: evcc/evcc
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  # -- Pull policy for the image.
+  pullPolicy: IfNotPresent
+
+# -- The restart policy for the deployment.
+restartPolicy: Always
+
+# -- The image pull secrets to use for pulling the image.
+imagePullSecrets: []
+
+# -- This is to override the chart name.
+nameOverride: ""
+# -- This is to override the chart fullname.
+fullnameOverride: ""
+
+config: |
+  # default configuration, see: https://docs.evcc.io/en/docs/reference/configuration
+  site:
+    title: Home # display name for UI
+    meters:
+      grid: my_grid
+      pv:
+        - my_pv
+      battery:
+        - my_battery
+
+  # define your loadpoints according your needs
+  # see https://docs.evcc.io/en/docs/reference/configuration/loadpoints
+  loadpoints:
+    - title: Garage # display name for UI
+      charger: my_charger # charger
+      vehicle: my_car # default vehicle
+
+  # meter definitions
+  # name can be freely chosen and is used as reference when assigning meters to site and loadpoints
+  # for documentation see https://docs.evcc.io/docs/devices/meters
+  meters:
+    # replace with your real grid meter
+    - name: my_grid
+      type: template
+      template: demo-meter
+      usage: grid
+      power: -1000 # 1 kW feed-in
+    # replace with your real pv system
+    - name: my_pv
+      type: template
+      template: demo-meter
+      usage: pv
+      power: 4000 # 4 kW production
+    # replace with your real battery
+    - name: my_battery
+      type: template
+      template: demo-battery
+      usage: battery
+      power: -1000 # 1 kW battery charging
+      soc: 50 # 50 % state of charge
+
+  # replace with your real charger
+  # see https://docs.evcc.io/docs/devices/chargers
+  chargers:
+    - name: my_charger
+      type: template
+      template: demo-charger
+      status: C # charging
+      power: 2000 # 2 kW charging power
+      enabled: true # optional
+
+  # replace with your real vehicle (optional)
+  # see https://docs.evcc.io/docs/devices/vehicles
+  vehicles:
+    - name: my_car
+      type: template
+      template: offline
+      title: blue e-Golf
+      capacity: 50 # in kWh
+
+  # enter your real grid tariff and feed-in price
+  # see https://docs.evcc.io/docs/tariffs
+  tariffs:
+    currency: EUR
+    grid:
+      type: fixed
+      price: 0.29 # EUR/kWh
+    feedin:
+      type: fixed
+      price: 0.10 # EUR/kWh
+
+externalSecrets:
+  # -- Whether to enable external secrets for the configmap
+  enabled: false
+  # -- Annotations to add to the external secret
+  annotations: {}
+  # -- Secret store reference
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+  # -- Refresh interval for the external secrets
+  refreshInterval: 30m
+  # -- Secrets to be loaded from the external secret store
+  data: []
+    # - secretKey: mqtt_broker
+    #   remoteRef:
+    #     key: evcc/configmap
+    #     property: mqtt_broker
+
+# -- Service account
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: false
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Annotations to add to the Pod
+podAnnotations: {}
+
+# -- Labels to add to the Pod.
+podLabels: {}
+
+# -- PodSecurityContext to be set on the pod level.
+podSecurityContext: {}
+  # fsGroup: 2000
+
+# -- SecurityContext to be set on the container level.
+securityContext:
+  # -- Capabilities to add or drop from the container
+  capabilities:
+    drop:
+      - ALL
+  # -- Whether the container should run as a non-root user
+  # runAsNonRoot: true
+  # # -- The UID to run the container as
+  # runAsUser: 30000
+  # # -- Configures whether the container can request additional privileges
+  allowPrivilegeEscalation: false
+
+# -- Service for the deployment
+service:
+  # -- Kubernetes service type
+  type: ClusterIP
+  # -- Kubernetes port where service is exposed
+  port: 80
+  # -- Annotations for the service
+  annotations: {}
+
+# -- Ingress for the deployment
+ingress:
+  # -- Whether to enable ingress for the deployment
+  enabled: false
+  # -- The ingress class to use
+  className: ""
+  # -- Annotations for the ingress
+  annotations: {}
+  # -- The ingress rules to use
+  hosts:
+    - host: evcc.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  # -- TLS configuration for the ingress
+  tls: []
+  #  - secretName: evcc-tls
+  #    hosts:
+  #      - evcc.local
+
+httproute:
+  # -- Whether to enable HTTPRoute for the deployment
+  enabled: false
+  # -- The hostnames to use for the HTTPRoute
+  hostnames:
+    - evcc.local
+  # -- The parent reference for the HTTPRoute
+  parentRef: {}
+  # -- Annotations for the HTTPRoute
+  annotations: {}
+  # -- The rules to use for the HTTPRoute
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+# -- Resources for the deployment
+resources:
+  limits:
+    cpu: 100m
+    memory: 256Mi
+  requests:
+    cpu: 10m
+    memory: 128Mi
+
+# The port that the container will listen on
+containerPort: 7070
+
+persistence:
+  # -- Whether to enable persistence for the deployment
+  enabled: false
+  ## If you want to reuse an existing claim, you can pass the name of the PVC using
+  ## the existingClaim variable
+  # -- Use an existing PVC to persist data
+  existingClaim: ""
+  # -- The storage class to use for the persistent volume claim
+  storageClass: "-"
+  # -- The access mode to use for the persistent volume claim
+  accessMode: ReadWriteOnce
+  # -- The size of the persistent volume claim
+  size: 5Gi
+
+# -- Liveness probe for the deployment
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  timeoutSeconds: 5
+
+# -- Readyiness probe for the deployment
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  timeoutSeconds: 5
+
+# -- Lifecycle hooks for the deployment (copy configmap data to correct location)
+lifecycle:
+  postStart:
+    exec:
+      command: ["/bin/sh", "-c", "cp /etc/evcc/evcc.yaml /etc/evcc.yaml"]
+
+# -- Additional volumes on the output Deployment definition.
+extraVolumes: []
+# -- Additional volumeMounts on the output Deployment definition.
+extraVolumeMounts: []
+# -- NodeSelector to use for the deployment
+nodeSelector: {}
+# -- Tolerations to use for the deployment
+tolerations: []
+# -- Affinity to use for the deployment
+affinity: {}
