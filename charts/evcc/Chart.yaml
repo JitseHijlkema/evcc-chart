@@ -4,8 +4,8 @@ description: Helm chart for EVCC (evcc.io)
 home: https://evcc.io/
 icon: https://jitsehijlkema.github.io/evcc-chart/evcc-logo.png
 type: application
-version: 1.0.29
-appVersion: 0.209.7
+version: 1.0.30
+appVersion: 0.209.8
 keywords:
   - evcc
   - charging
