@@ -58,8 +58,6 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /root/.evcc
-            - name: config
-              mountPath: /etc/evcc
           {{- with .Values.extraVolumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
