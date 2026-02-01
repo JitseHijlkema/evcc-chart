@@ -37,96 +37,6 @@ nameOverride: ""
 # -- This is to override the chart fullname.
 fullnameOverride: ""
 
-config: |
-  # default configuration, see: https://docs.evcc.io/en/docs/reference/configuration
-  site:
-    title: Home # display name for UI
-    meters:
-      grid: my_grid
-      pv:
-        - my_pv
-      battery:
-        - my_battery
-
-  # define your loadpoints according your needs
-  # see https://docs.evcc.io/en/docs/reference/configuration/loadpoints
-  loadpoints:
-    - title: Garage # display name for UI
-      charger: my_charger # charger
-      vehicle: my_car # default vehicle
-
-  # meter definitions
-  # name can be freely chosen and is used as reference when assigning meters to site and loadpoints
-  # for documentation see https://docs.evcc.io/docs/devices/meters
-  meters:
-    # replace with your real grid meter
-    - name: my_grid
-      type: template
-      template: demo-meter
-      usage: grid
-      power: -1000 # 1 kW feed-in
-    # replace with your real pv system
-    - name: my_pv
-      type: template
-      template: demo-meter
-      usage: pv
-      power: 4000 # 4 kW production
-    # replace with your real battery
-    - name: my_battery
-      type: template
-      template: demo-battery
-      usage: battery
-      power: -1000 # 1 kW battery charging
-      soc: 50 # 50 % state of charge
-
-  # replace with your real charger
-  # see https://docs.evcc.io/docs/devices/chargers
-  chargers:
-    - name: my_charger
-      type: template
-      template: demo-charger
-      status: C # charging
-      power: 2000 # 2 kW charging power
-      enabled: true # optional
-
-  # replace with your real vehicle (optional)
-  # see https://docs.evcc.io/docs/devices/vehicles
-  vehicles:
-    - name: my_car
-      type: template
-      template: offline
-      title: blue e-Golf
-      capacity: 50 # in kWh
-
-  # enter your real grid tariff and feed-in price
-  # see https://docs.evcc.io/docs/tariffs
-  tariffs:
-    currency: EUR
-    grid:
-      type: fixed
-      price: 0.29 # EUR/kWh
-    feedin:
-      type: fixed
-      price: 0.10 # EUR/kWh
-
-externalSecrets:
-  # -- Whether to enable external secrets for the configmap
-  enabled: false
-  # -- Annotations to add to the external secret
-  annotations: {}
-  # -- Secret store reference
-  secretStoreRef:
-    name: ""
-    kind: ClusterSecretStore
-  # -- Refresh interval for the external secrets
-  refreshInterval: 30m
-  # -- Secrets to be loaded from the external secret store
-  data: []
-    # - secretKey: mqtt_broker
-    #   remoteRef:
-    #     key: evcc/configmap
-    #     property: mqtt_broker
-
 # -- Service account
 serviceAccount:
   # -- Specifies whether a service account should be created
@@ -170,26 +80,6 @@ service:
   port: 80
   # -- Annotations for the service
   annotations: {}
-
-# -- Ingress for the deployment
-ingress:
-  # -- Whether to enable ingress for the deployment
-  enabled: false
-  # -- The ingress class to use
-  className: ""
-  # -- Annotations for the ingress
-  annotations: {}
-  # -- The ingress rules to use
-  hosts:
-    - host: evcc.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  # -- TLS configuration for the ingress
-  tls: []
-  #  - secretName: evcc-tls
-  #    hosts:
-  #      - evcc.local
 
 httproute:
   # -- Whether to enable HTTPRoute for the deployment
@@ -251,11 +141,7 @@ readinessProbe:
   timeoutSeconds: 5
 
 # -- Lifecycle hooks for the deployment (copy configmap data to correct location)
-lifecycle:
-  postStart:
-    exec:
-      command: ["/bin/sh", "-c", "cp /etc/evcc/evcc.yaml /etc/evcc.yaml"]
-
+lifecycle: {}
 # -- Additional volumes on the output Deployment definition.
 extraVolumes: []
 # -- Additional volumeMounts on the output Deployment definition.
