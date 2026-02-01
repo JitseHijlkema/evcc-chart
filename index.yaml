@@ -3,6 +3,22 @@ entries:
   evcc:
   - apiVersion: v2
     appVersion: 0.300.8
+    created: "2026-02-01T13:50:16.064715281Z"
+    description: Helm chart for EVCC (evcc.io)
+    digest: 43c36f147d45463b15a0e91513cc53bf108f26174c2e83037dd7d9981836680d
+    home: https://evcc.io/
+    icon: https://jitsehijlkema.github.io/evcc-chart/evcc-logo.png
+    keywords:
+    - evcc
+    - charging
+    - ev
+    name: evcc
+    type: application
+    urls:
+    - https://github.com/JitseHijlkema/evcc-chart/releases/download/evcc-1.0.46/evcc-1.0.46.tgz
+    version: 1.0.46
+  - apiVersion: v2
+    appVersion: 0.300.8
     created: "2026-02-01T13:47:00.615708005Z"
     description: Helm chart for EVCC (evcc.io)
     digest: e17195fee0fb1f9c5505cbaac39fca63d2f0f620b2f1e61c71e991339d209b17
@@ -753,4 +769,4 @@ entries:
     urls:
     - https://github.com/JitseHijlkema/evcc-chart/releases/download/evcc-0.0.1/evcc-0.0.1.tgz
     version: 0.0.1
-generated: "2026-02-01T13:47:00.616060993Z"
+generated: "2026-02-01T13:50:16.065146199Z"
