@@ -21,11 +21,10 @@ spec:
       {{- include "evcc.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- with .Values.podAnnotations }}
+      {{- with .Values.podAnnotations }}
+        annotations:
         {{- toYaml . | nindent 8 }}
-        {{- end }}
+      {{- end }}
       labels:
         {{- include "evcc.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
@@ -69,14 +68,6 @@ spec:
             {{- . | toYaml | nindent 12}}
           {{- end }}
       volumes:
-        - name: config
-        {{- if .Values.externalSecrets.enabled }}
-          secret:
-            secretName: {{ include "evcc.fullname" . }}
-        {{- else }}
-          configMap:
-            name: {{ include "evcc.fullname" . }}
-        {{- end }}
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
