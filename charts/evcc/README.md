@@ -1,6 +1,6 @@
 # evcc
 
-![Version: 1.0.36](https://img.shields.io/badge/Version-1.0.36-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.300.0](https://img.shields.io/badge/AppVersion-0.300.0-informational?style=flat-square)
+![Version: 1.0.37](https://img.shields.io/badge/Version-1.0.37-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.300.1](https://img.shields.io/badge/AppVersion-0.300.1-informational?style=flat-square)
 
 Helm chart for EVCC (evcc.io)
 
